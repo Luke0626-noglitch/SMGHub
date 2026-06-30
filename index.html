@@ -1,0 +1,1777 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Security Management Online Hub</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --tabfont: "Montserrat", "Calibri", "Segoe UI", Arial, sans-serif;
+  --ink:#0a1f3d;
+  --steel:#10294d;
+  --steel-light:#173a66;
+  --paper:#f3f6fb;
+  --paper-card:#ffffff;
+  --accent:#2f7de1;
+  --accent-soft:#eaf2fd;
+  --accent-grad:linear-gradient(135deg,#2f7de1,#1d4e89);
+  --green:#2f7d52;
+  --green-soft:#e6f3eb;
+  --red:#b3392f;
+  --red-soft:#fcebe9;
+  --line:#e1e8f2;
+  --shadow:0 1px 2px rgba(10,31,61,.04), 0 6px 20px rgba(10,31,61,.06);
+  --shadow-lg:0 10px 40px rgba(10,31,61,.14);
+  --mono: "Consolas", "Calibri", monospace;
+  --sans: "Calibri", "Segoe UI", Arial, sans-serif;
+  --disp: "Calibri", "Segoe UI", Arial, sans-serif;
+}
+*{box-sizing:border-box;}
+body{margin:0;font-family:var(--sans);background:var(--paper);color:var(--ink);-webkit-font-smoothing:antialiased;}
+a{color:inherit;}
+
+.topbar{
+  background:#ffffff;color:var(--ink);padding:14px 26px;
+  display:flex;align-items:center;justify-content:space-between;
+  border-bottom:1px solid var(--line);flex-wrap:wrap;gap:10px;
+  box-shadow:var(--shadow);position:relative;z-index:2;
+}
+.brand{display:flex;align-items:center;gap:12px;}
+.brand .crest{
+  width:36px;height:36px;border-radius:10px;
+  display:flex;align-items:center;justify-content:center;
+  font-weight:700;letter-spacing:1px;background:var(--accent-grad);
+  box-shadow:0 4px 10px rgba(47,125,225,.35);
+}
+.brand .crest span{color:#fff;font-size:12px;}
+.brand h1{font-weight:700;font-size:19px;letter-spacing:.2px;margin:0;color:var(--ink);}
+.brand .sub{font-size:10.5px;color:#7388a6;letter-spacing:1.5px;text-transform:uppercase;margin-top:2px;}
+.clearance-tag{
+  font-family:var(--mono);font-size:11px;letter-spacing:.5px;
+  padding:4px 10px;border-radius:20px;background:var(--accent-soft);color:var(--accent);
+  text-transform:uppercase;font-weight:700;
+}
+
+.shell{display:flex;min-height:calc(100vh - 65px);}
+.maintabs{
+  display:flex;flex-direction:column;background:var(--ink);
+  width:250px;flex:0 0 250px;padding:16px 0;
+  box-shadow:2px 0 16px rgba(10,31,61,.18);
+}
+.maintabs h3.sidebar-title{color:#5d7eac;font-family:var(--mono);font-size:10px;letter-spacing:2.5px;padding:4px 22px 14px;margin:0;text-transform:uppercase;}
+.nav-group{margin-bottom:2px;}
+.nav-group > button{
+  display:flex;align-items:center;gap:10px;background:none;border:none;color:#b9c9e3;text-align:left;
+  font-family:var(--tabfont);font-weight:600;font-size:12px;letter-spacing:.2px;text-transform:uppercase;
+  padding:11px 22px;cursor:pointer;width:100%;border-left:3px solid transparent;
+  transition:background .15s, color .15s;
+}
+.nav-group > button:hover{background:rgba(255,255,255,.05);color:#fff;}
+.nav-group.active > button{background:rgba(47,125,225,.14);color:#fff;border-left-color:var(--accent);}
+.nav-group .num{font-family:var(--mono);font-size:10.5px;opacity:.55;}
+.nav-group .chev{margin-left:auto;font-size:10px;opacity:.6;transition:transform .15s;}
+.nav-group.active .chev{transform:rotate(90deg);}
+.subnav{display:none;flex-direction:column;background:rgba(0,0,0,.18);}
+.nav-group.active .subnav{display:flex;}
+.subnav button{
+  background:none;border:none;color:#8da3c7;text-align:left;
+  font-family:var(--tabfont);font-size:11px;font-weight:500;letter-spacing:.1px;
+  padding:9px 22px 9px 44px;cursor:pointer;border-left:3px solid transparent;
+}
+.subnav button:hover{color:#fff;}
+.subnav button.active{color:#fff;background:rgba(255,255,255,.05);border-left-color:var(--accent);}
+
+.main-area{flex:1;display:flex;flex-direction:column;min-width:0;}
+.content{padding:28px 30px;max-width:1180px;margin:0 auto;width:100%;}
+.panel{display:none;}
+.panel.active{display:block;}
+.card{background:var(--paper-card);border:1px solid var(--line);border-radius:12px;padding:22px 24px;margin-bottom:18px;box-shadow:var(--shadow);}
+.card h2{font-size:16.5px;letter-spacing:.2px;margin:0 0 4px;color:var(--ink);font-weight:700;}
+.card .desc{font-size:12.5px;color:#7388a6;margin-bottom:16px;}
+.access-note{
+  font-family:var(--mono);font-size:11px;background:var(--accent-soft);border:1px solid #cfe1fb;
+  color:var(--steel);padding:7px 11px;display:inline-block;margin-bottom:14px;border-radius:20px;
+}
+.locked-note{
+  font-family:var(--mono);font-size:11px;background:var(--red-soft);border:1px solid #f3c9c4;
+  color:var(--red);padding:7px 11px;display:inline-block;margin-bottom:14px;border-radius:20px;
+}
+.scope-note{
+  font-family:var(--mono);font-size:11px;background:#fff;border:1px solid var(--line);
+  color:#7388a6;padding:7px 11px;display:inline-block;margin-bottom:14px;border-radius:20px;
+}
+
+table{width:100%;border-collapse:collapse;font-size:13px;}
+th{
+  text-align:left;background:var(--ink);color:#cfe0f7;font-size:10px;letter-spacing:.6px;
+  text-transform:uppercase;padding:10px 12px;font-family:var(--mono);
+}
+th:first-child{border-radius:8px 0 0 0;}
+th:last-child{border-radius:0 8px 0 0;}
+td{padding:10px 12px;border-bottom:1px solid var(--line);}
+tr:hover td{background:#f7faff;}
+.status-pill{font-size:10.5px;padding:3px 10px;border-radius:20px;font-weight:700;letter-spacing:.2px;}
+.status-active{background:var(--green-soft);color:var(--green);}
+.status-inactive{background:var(--red-soft);color:var(--red);}
+.status-pending{background:#fff4e0;color:#9a6b12;}
+.cat-badge{background:var(--accent-grad);color:#fff;font-family:var(--mono);font-size:10px;padding:2px 8px;border-radius:10px;}
+.btn{font-weight:700;font-size:13px;border:none;border-radius:8px;padding:10px 18px;cursor:pointer;background:var(--ink);color:#fff;transition:transform .1s, background .15s;}
+.btn:hover{background:var(--steel-light);}
+.btn:active{transform:scale(.97);}
+.btn.amber{background:var(--accent-grad);box-shadow:0 4px 12px rgba(47,125,225,.3);}
+.btn.amber:hover{filter:brightness(1.08);}
+.btn.approve{background:var(--green);}
+.btn.disapprove{background:var(--red);}
+.btn.ghost{background:transparent;border:1px solid var(--line);color:var(--steel);}
+.btn.ghost:hover{background:var(--accent-soft);}
+.btn:disabled{opacity:.4;cursor:not-allowed;}
+.row-actions button{font-size:11px;padding:5px 11px;margin-right:4px;}
+.toolbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;flex-wrap:wrap;gap:10px;}
+.toolbar input[type=text]{padding:9px 12px;border:1px solid var(--line);border-radius:8px;font-size:13px;min-width:220px;font-family:var(--sans);}
+
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px 16px;}
+.form-grid.wide{grid-template-columns:1fr;}
+.field{display:flex;flex-direction:column;gap:5px;}
+.field.span2{grid-column:1/-1;}
+.field label{font-size:11px;font-weight:700;letter-spacing:.3px;color:var(--steel);text-transform:uppercase;}
+.field input, .field select, .field textarea{
+  padding:10px 12px;border:1px solid var(--line);border-radius:8px;font-size:13.5px;font-family:var(--sans);background:#fcfdfe;
+  transition:border-color .15s, box-shadow .15s;
+}
+.field input:focus, .field select:focus, .field textarea:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft);}
+.phase-list{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px;}
+.phase-chip{background:var(--ink);color:#fff;font-size:12px;padding:6px 12px;border-radius:20px;display:flex;align-items:center;gap:8px;}
+.phase-chip button{background:none;border:none;color:#ffb4b4;cursor:pointer;font-weight:700;}
+.add-phase-row{display:flex;gap:8px;margin-top:8px;align-items:center;flex-wrap:wrap;}
+.add-phase-row input{flex:1;min-width:140px;}
+.add-phase-row select{min-width:140px;}
+.upload-box{border:1.5px dashed var(--line);border-radius:10px;padding:20px;text-align:center;font-size:12.5px;color:#7388a6;cursor:pointer;background:#fafbfc;transition:border-color .15s, background .15s;}
+.upload-box:hover{border-color:var(--accent);background:var(--accent-soft);}
+.upload-box.has-file{border-color:var(--green);color:var(--green);background:var(--green-soft);}
+.link-box{font-family:var(--mono);font-size:12px;background:var(--paper);border:1px solid var(--line);padding:9px 12px;border-radius:8px;word-break:break-all;color:var(--steel-light);}
+.form-actions{margin-top:18px;display:flex;gap:10px;flex-wrap:wrap;}
+.banner-ok{background:var(--green-soft);color:var(--green);border:1px solid #b8dcc4;padding:10px 14px;border-radius:8px;font-size:12.5px;margin-bottom:12px;display:none;}
+.section-divider{margin:24px 0 14px;border-top:1px solid var(--line);padding-top:16px;}
+.section-divider h3{font-size:12.5px;text-transform:uppercase;color:#7388a6;letter-spacing:.6px;margin:0 0 10px;font-weight:700;}
+.report-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+.report-list{list-style:none;margin:0;padding:0;}
+.report-list li{padding:10px 0;border-bottom:1px solid var(--line);font-size:13px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:6px;}
+.report-list li span.tag{font-family:var(--mono);font-size:10.5px;color:#8b96a3;}
+.remarks-input{width:200px;}
+.so-row td{vertical-align:top;}
+.login-screen{
+  position:fixed;inset:0;background:radial-gradient(circle at 30% 20%, #173a66, #0a1f3d 70%);
+  display:flex;align-items:center;justify-content:center;z-index:999;
+}
+.login-box{
+  background:#fff;border-radius:18px;padding:38px 36px;width:400px;box-shadow:var(--shadow-lg);
+}
+.login-box .crest{
+  width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;
+  font-weight:700;background:var(--accent-grad);margin:0 auto 18px;box-shadow:0 4px 12px rgba(47,125,225,.35);
+}
+.login-box .crest span{color:#fff;font-size:14px;}
+.login-box h2{text-align:center;font-size:18px;margin:0 0 4px;color:var(--ink);font-weight:700;}
+.login-box .sub{text-align:center;font-size:11px;color:#7388a6;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:24px;}
+.login-box .field{margin-bottom:14px;}
+.login-box label{font-size:11px;font-weight:700;color:var(--steel);text-transform:uppercase;display:block;margin-bottom:6px;}
+.login-box input[type=email]{width:100%;padding:11px 12px;border:1px solid var(--line);border-radius:8px;font-size:13.5px;font-family:var(--sans);}
+.login-box input[type=email]:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft);}
+.login-error{font-size:12px;color:var(--red);margin-bottom:10px;display:none;}
+.login-hint{font-size:10.5px;color:#9aabc4;margin-top:16px;text-align:center;line-height:1.6;}
+.consent-box{
+  display:flex;gap:10px;align-items:flex-start;background:var(--paper);border:1px solid var(--line);
+  border-radius:10px;padding:12px 14px;margin-bottom:16px;
+}
+.consent-box input[type=checkbox]{margin-top:2px;width:16px;height:16px;accent-color:var(--accent);cursor:pointer;flex:0 0 auto;}
+.consent-box p{font-size:11px;color:#5a7290;line-height:1.55;margin:0;}
+.session-badge{display:flex;align-items:center;gap:10px;font-size:12px;}
+.logout-link{font-family:var(--mono);font-size:11px;color:var(--accent);cursor:pointer;text-decoration:none;background:none;border:none;font-weight:700;}
+.logout-link:hover{text-decoration:underline;}
+@media (max-width:760px){
+  .form-grid, .report-grid{grid-template-columns:1fr;}
+  .topbar{flex-direction:column;align-items:flex-start;gap:10px;}
+  .shell{flex-direction:column;}
+  .maintabs{width:100%;flex:0 0 auto;}
+}
+.modal-overlay{
+  position:fixed;inset:0;background:rgba(10,31,61,.55);display:none;align-items:center;justify-content:center;z-index:500;padding:20px;
+}
+.modal-overlay.active{display:flex;}
+.modal-box{
+  background:#fff;border-radius:14px;padding:26px 28px;width:560px;max-width:100%;max-height:88vh;overflow-y:auto;
+  box-shadow:var(--shadow-lg);
+}
+.modal-box h2{margin:0 0 4px;font-size:16.5px;color:var(--ink);font-weight:700;}
+.modal-box .desc{font-size:12px;color:#7388a6;margin-bottom:16px;}
+.modal-close-row{display:flex;justify-content:flex-end;gap:10px;margin-top:20px;}
+.view-row{display:flex;justify-content:space-between;padding:9px 0;border-bottom:1px solid var(--line);font-size:13px;gap:16px;}
+.view-row .vlabel{font-weight:700;color:var(--steel);font-size:11px;text-transform:uppercase;letter-spacing:.3px;}
+.view-row .vvalue{color:var(--ink);text-align:right;}
+</style>
+</head>
+<body>
+
+<div class="login-screen" id="loginScreen">
+  <div class="login-box">
+    <div class="crest"><span>SH</span></div>
+    <h2>Security Management Online Hub</h2>
+    <div class="sub">Authorized Personnel Only</div>
+    <div class="login-error" id="loginError">No user account found with that e-mail. Contact your Super Admin to be added.</div>
+    <div class="field">
+      <label>Registered E-mail</label>
+      <input id="loginEmail" type="email" placeholder="name@domain.ph" onkeydown="if(event.key==='Enter')attemptLogin()">
+    </div>
+    <div class="consent-box">
+      <input type="checkbox" id="consentCheck" onchange="updateLoginButtonState()">
+      <p>By logging in and using this system, you consent to the collection and processing of your personal data solely for security monitoring, personnel management, operational reporting, and related security service purposes. All information will be handled in accordance with applicable data privacy laws and company policies.</p>
+    </div>
+    <button class="btn amber" id="loginBtn" style="width:100%;" disabled onclick="attemptLogin()">Log In</button>
+    <div class="login-hint">Access is granted only to e-mails added via the Users tab by a Super Admin.</div>
+  </div>
+</div>
+
+<div class="topbar">
+  <div class="brand">
+    <div class="crest"><span>SH</span></div>
+    <div>
+      <h1>Security Management Online Hub</h1>
+      <div class="sub">Consolidated Operations Platform</div>
+    </div>
+  </div>
+  <div class="session-badge" id="sessionBadge"></div>
+</div>
+
+<div class="modal-overlay" id="modalOverlay" onclick="if(event.target===this)closeModal()">
+  <div class="modal-box" id="modalBox"></div>
+</div>
+
+<div class="shell">
+  <div class="maintabs" id="mainTabs"></div>
+  <div class="main-area">
+    <div class="content" id="content"></div>
+  </div>
+</div>
+
+<script>
+/* ===================== LIVE SYNC CONFIG ===================== */
+/* Paste your deployed Apps Script Web App URL here once available.
+   Until then, the Hub runs fully in-memory (demo mode) and this is skipped. */
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbx8piCTnvJjFW6UN5qido0jucZoedeC3x17oKIwqAmgYeOL2VfkcaOiRHYkOTDErhjL/exec";
+
+/* ===================== JSONP TRANSPORT ===================== */
+/* fetch() to an Apps Script Web App is unreliable across browsers due to
+   CORS — even though the same URL works fine when opened directly in a
+   browser tab. Loading via a <script> tag (JSONP) sidesteps CORS entirely,
+   since script tags were never subject to it. This is the standard
+   workaround for browser <-> Apps Script communication. */
+let jsonpCounter = 0;
+/* ===================== FILE UPLOAD TRANSPORT (hidden form + iframe) ===================== */
+/* Files are sent via a real <form> POST submitted into a hidden <iframe>,
+   not fetch(). Browsers don't apply CORS to form submissions/navigations —
+   only to script-readable fetch/XHR responses — so this reliably avoids
+   every CORS failure mode we hit elsewhere. The Apps Script side responds
+   with a tiny HTML page that calls parent.postMessage(...) so the Hub can
+   still read the result, since postMessage works across origins by design. */
+let uploadRequestCounter = 0;
+
+function fileToBase64(file){
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => {
+      const result = reader.result; // "data:<mime>;base64,<data>"
+      const commaIdx = result.indexOf(",");
+      resolve(result.slice(commaIdx + 1));
+    };
+    reader.onerror = () => reject(new Error("Could not read the selected file."));
+    reader.readAsDataURL(file);
+  });
+}
+
+function uploadFileToDrive(opts){
+  // opts: { file, category, guardName, folderId, sheet, row, linkField, key, keyValue }
+  return new Promise(async (resolve, reject) => {
+    if(!SCRIPT_URL){ reject(new Error("SCRIPT_URL is not configured yet.")); return; }
+    let base64Data;
+    try{ base64Data = await fileToBase64(opts.file); }
+    catch(err){ reject(err); return; }
+
+    const requestId = "smgUpload_" + (uploadRequestCounter++) + "_" + Date.now();
+    const iframeName = requestId + "_frame";
+
+    const iframe = document.createElement('iframe');
+    iframe.name = iframeName;
+    iframe.style.display = "none";
+    document.body.appendChild(iframe);
+
+    const form = document.createElement('form');
+    form.method = "POST";
+    form.action = SCRIPT_URL;
+    form.target = iframeName;
+    form.style.display = "none";
+
+    function addField(name, value){
+      const input = document.createElement('input');
+      input.type = "hidden";
+      input.name = name;
+      input.value = (value === undefined || value === null) ? "" : value;
+      form.appendChild(input);
+    }
+    addField("fileBase64", base64Data);
+    addField("fileName", opts.file.name);
+    addField("mimeType", opts.file.type || "application/octet-stream");
+    if(opts.category) addField("category", opts.category);
+    if(opts.guardName) addField("guardName", opts.guardName);
+    if(opts.folderId) addField("folderId", opts.folderId);
+    if(opts.sheet) addField("sheet", opts.sheet);
+    if(opts.row) addField("row", JSON.stringify(opts.row));
+    if(opts.linkField) addField("linkField", opts.linkField);
+    if(opts.key) addField("key", opts.key);
+    if(opts.keyValue) addField("keyValue", opts.keyValue);
+
+    document.body.appendChild(form);
+
+    let finished = false;
+    function cleanup(){
+      window.removeEventListener('message', onMessage);
+      if(form.parentNode) form.parentNode.removeChild(form);
+      // Leave the iframe briefly so the response page can finish executing, then remove it.
+      setTimeout(() => { if(iframe.parentNode) iframe.parentNode.removeChild(iframe); }, 2000);
+    }
+    function onMessage(event){
+      if(finished) return;
+      let data;
+      try{ data = JSON.parse(event.data); } catch(e){ return; } // ignore unrelated messages
+      finished = true;
+      cleanup();
+      resolve(data);
+    }
+    window.addEventListener('message', onMessage);
+
+    setTimeout(() => {
+      if(finished) return;
+      finished = true;
+      cleanup();
+      reject(new Error("File upload timed out."));
+    }, 30000);
+
+    form.submit();
+  });
+}
+
+function jsonpRequest(url, timeoutMs){
+  return new Promise((resolve, reject) => {
+    const callbackName = "smgJsonp_" + (jsonpCounter++) + "_" + Date.now();
+    const script = document.createElement('script');
+    let finished = false;
+
+    function cleanup(){
+      delete window[callbackName];
+      if(script.parentNode) script.parentNode.removeChild(script);
+    }
+    window[callbackName] = function(data){
+      if(finished) return;
+      finished = true;
+      cleanup();
+      resolve(data);
+    };
+    script.onerror = function(){
+      if(finished) return;
+      finished = true;
+      cleanup();
+      reject(new Error("JSONP request failed to load (network/script error)."));
+    };
+    setTimeout(() => {
+      if(finished) return;
+      finished = true;
+      cleanup();
+      reject(new Error("JSONP request timed out."));
+    }, timeoutMs || 12000);
+
+    script.src = url + (url.indexOf("?") === -1 ? "?" : "&") + "callback=" + callbackName;
+    document.body.appendChild(script);
+  });
+}
+
+function liveSync(sheetName, rowObj, guardFolderName, upsertKey, upsertKeyValue){
+  if(!SCRIPT_URL){
+    console.warn("Live sync skipped — SCRIPT_URL is not configured yet.");
+    return;
+  }
+  const payload = {
+    sheet: sheetName,
+    row: rowObj,
+    createGuardFolderFor: guardFolderName || null,
+    key: upsertKey || null,
+    keyValue: upsertKeyValue || null
+  };
+  const url = SCRIPT_URL + "?payload=" + encodeURIComponent(JSON.stringify(payload));
+  jsonpRequest(url)
+    .then(data => {
+      if(!data.ok){
+        console.error("Live sync rejected by backend:", data.error);
+        alert("Live sync failed for \"" + sheetName + "\":\n" + data.error + "\n\nYour entry was still saved locally in this browser session, but did NOT reach the Google Sheet. Use the \"Test Connection\" button (top right) to check the backend.");
+      } else {
+        console.log("Live sync OK:", sheetName, data.result || data);
+      }
+    })
+    .catch(err => {
+      console.error("Live sync request failed:", err);
+      alert("Could not reach the live sync backend for \"" + sheetName + "\":\n" + err.message + "\n\nYour entry was still saved locally in this browser session, but did NOT reach the Google Sheet. Use the \"Test Connection\" button (top right) to check the backend.");
+    });
+}
+/* ===================== AREAS / SCOPE ===================== */
+const AREAS = ["North A","North B","North C","South A","South B","South C"];
+
+let role = null;
+let scopeAgency = null;
+let scopeArea = []; // array of area strings for PIC/SO multi-scope
+let currentUser = null;
+const roleLabels = { superadmin:"SUPER ADMIN", agency:"SECURITY AGENCY", pic:"PIC", so:"SECURITY OFFICER" };
+const designationToRole = { "Super Admin":"superadmin", "Security Agency":"agency", "PIC":"pic", "Security Officer":"so" };
+
+let backendDataLoading = false;
+
+function updateLoginButtonState(){
+  const loginBtn = document.getElementById('loginBtn');
+  const consent = document.getElementById('consentCheck');
+  if(!loginBtn) return;
+  if(backendDataLoading){ loginBtn.disabled = true; return; }
+  loginBtn.disabled = !(consent && consent.checked);
+}
+
+function attemptLogin(){
+  if(backendDataLoading){
+    alert("Still syncing the latest accounts from Google Sheets — please wait a moment and try again.");
+    return;
+  }
+  if(!document.getElementById('consentCheck').checked){
+    alert("Please confirm the data privacy agreement before logging in.");
+    return;
+  }
+  const email = document.getElementById('loginEmail').value.trim().toLowerCase();
+  const user = db.users.find(u => u.email.toLowerCase() === email);
+  const errorBox = document.getElementById('loginError');
+  if(!user){
+    errorBox.style.display = "block";
+    return;
+  }
+  errorBox.style.display = "none";
+  currentUser = user;
+  role = designationToRole[user.designation];
+  scopeAgency = user.agency || null;
+  scopeArea = user.area ? user.area.split(",").map(a=>a.trim()).filter(Boolean) : [];
+  document.getElementById('loginScreen').style.display = "none";
+  renderSessionBadge();
+  render();
+}
+function logout(){
+  currentUser = null; role = null; scopeAgency = null; scopeArea = [];
+  document.getElementById('loginEmail').value = "";
+  document.getElementById('consentCheck').checked = false;
+  document.getElementById('loginBtn').disabled = true;
+  document.getElementById('loginScreen').style.display = "flex";
+}
+function renderSessionBadge(){
+  const badge = document.getElementById('sessionBadge');
+  if(!currentUser){ badge.innerHTML = ""; return; }
+  const scopeText = scopeAgency ? `Agency: ${scopeAgency}` : (scopeArea.length ? `Area: ${scopeArea.join(", ")}` : "All Access");
+  badge.innerHTML = `
+    <span class="clearance-tag">CLEARANCE: ${roleLabels[role]}</span>
+    <span style="font-size:11.5px;color:#5a7290;">${currentUser.name} · ${scopeText}</span>
+    <span id="syncStatus" class="clearance-tag" style="background:#fce8e6;border-color:#e7b3ac;color:#a3392f;">LIVE SYNC: NOT CONFIGURED</span>
+    <button class="logout-link" onclick="testLiveSync()">Test Connection</button>
+    <button class="logout-link" onclick="logout()">Log out</button>
+  `;
+  if(SCRIPT_URL) testLiveSync(true);
+}
+
+async function testLiveSync(silent){
+  const pill = document.getElementById('syncStatus');
+  if(!SCRIPT_URL){
+    if(pill){ pill.textContent = "LIVE SYNC: NOT CONFIGURED"; pill.style.background="#fce8e6"; pill.style.color="#a3392f"; pill.style.borderColor="#e7b3ac"; }
+    if(!silent) alert("SCRIPT_URL is empty in this file. Paste your deployed Apps Script Web App URL into the SCRIPT_URL constant near the top of the script section, then reload this page.");
+    return;
+  }
+  if(pill){ pill.textContent = "LIVE SYNC: CHECKING..."; pill.style.background="#fff4e0"; pill.style.color="#9a6b12"; pill.style.borderColor="#f0d8a8"; }
+  try{
+    const data = await jsonpRequest(SCRIPT_URL);
+    if(data.ok){
+      if(pill){ pill.textContent = "LIVE SYNC: CONNECTED"; pill.style.background="#e6f3eb"; pill.style.color="#2f7d52"; pill.style.borderColor="#b8dcc4"; }
+      if(!silent) alert("Connected. Tabs found on the backend:\n" + (data.tabs || []).join(", "));
+    } else {
+      throw new Error(data.error || "Unknown backend error");
+    }
+  } catch(err){
+    if(pill){ pill.textContent = "LIVE SYNC: ERROR"; pill.style.background="#fce8e6"; pill.style.color="#a3392f"; pill.style.borderColor="#e7b3ac"; }
+    if(!silent) alert("Could not reach the backend:\n" + err.message + "\n\nCommon causes:\n- Web app not deployed, or deployed with access set to something other than 'Anyone'\n- SCRIPT_URL doesn't end in /exec\n- Script edited after deploy but not redeployed as a new version\n- setup() was never run, so tabs don't exist yet");
+  }
+}
+
+function can(area){
+  const rules = {
+    existingGuards_edit: ["agency"],
+    addGuard_edit: ["agency"],
+    addGuard_view: ["agency","pic","so","superadmin"],
+    soApproval_edit: ["so"],
+    existingSites_edit: ["superadmin"],
+    newSite_edit: ["superadmin"],
+    plantilla_edit: ["superadmin","agency"],
+    approvedPlantilla_edit: ["superadmin","so"],
+    agency_edit: ["superadmin"],
+    users_edit: ["superadmin"],
+    users_view: ["superadmin"],
+  };
+  if(!rules[area]) return true;
+  return rules[area].includes(role);
+}
+
+/* ===================== DATA STORE (in-memory demo) ===================== */
+const db = {
+  guards: [
+    {name:"Ramon D. Cruz", gender:"Male", status:"Active", remarks:"On-duty", designation:"Security Guard", site:"Riverside Commercial Complex", agency:"Falcon Security Corp", area:"North A"},
+    {name:"Liza M. Santos", gender:"Female", status:"Active", remarks:"On-duty", designation:"Head Guard", site:"Greenfield Logistics Hub", agency:"Eagle Eye Security", area:"South B"},
+  ],
+  newGuards: [
+    {name:"Carlo P. Reyes", designation:"Security Guard", deploy:"2026-06-10", dstatus:"Active", remarks:"On-duty", agency:"Falcon Security Corp", area:"North A", site:"Riverside Commercial Complex", link:"https://drive.google.com/drive/folders/DEMO-carlo-12345", soStatus:"Pending", soRemarks:""},
+  ],
+  plantillaExisting: [
+    {site:"Riverside Commercial Complex", agency:"Falcon Security Corp", slots:12, filled:11},
+  ],
+  plantillaApproved: [
+    {site:"Greenfield Logistics Hub", area:"South B", phase:"Phase 1", agency:"Eagle Eye Security", gate:3, roving:2, warehouse:2, oicSic:1, approvedDate:"2026-03-10"},
+  ],
+  sites: [
+    {name:"Riverside Commercial Complex", phase:"Phase 1", category:3, area:"North A", agency:"Falcon Security Corp", status:"Operational"},
+    {name:"Riverside Commercial Complex", phase:"Phase 2", category:5, area:"North A", agency:"Falcon Security Corp", status:"Operational"},
+    {name:"Greenfield Logistics Hub", phase:"Phase 1", category:4, area:"South B", agency:"Eagle Eye Security", status:"Operational"},
+  ],
+  agencies: [
+    {name:"Falcon Security Corp", address:"123 Mabini St., QC", contact:"Juan Dela Cruz", details:"0917-123-4567", lto:"LTO-00021"},
+    {name:"Eagle Eye Security", address:"45 Aguinaldo Ave., Pasig", contact:"Maria Lopez", details:"0918-555-2211", lto:"LTO-00088"},
+  ],
+  users: [
+    {name:"Super Admin User", email:"admin@smg.ph", designation:"Super Admin", agency:"", area:""},
+    {name:"Juan Dela Cruz", email:"juan@falconsecurity.ph", designation:"Security Agency", agency:"Falcon Security Corp", area:""},
+    {name:"Pia Ramos", email:"pia.ramos@smg.ph", designation:"PIC", agency:"", area:"North A"},
+    {name:"Sam Ortega", email:"sam.ortega@smg.ph", designation:"Security Officer", agency:"", area:"South B"},
+  ],
+  reports: {
+    investigationPIC: [], investigationAgency: [], finalSO: [], siteAssessmentSO: [], siteAssessmentAgency: [],
+    memoPlantilla: [], memoNTP: [], memoNOT: [], memoNOV: [], memoSpecial: []
+  }
+};
+let phaseDraft = [];
+
+/* ===================== TAB STRUCTURE ===================== */
+const structure = {
+  guard: { label:"Security Guard", subs:{ existing:"Existing Guards", add:"Additional Guard", soMonitoring:"Deployment Approval" } },
+  plantilla: { label:"Plantilla", subs:{ existing:"Existing Plantilla", approved:"Approved Plantilla" } },
+  sites: { label:"Project Sites", subs:{ existing:"Existing Sites", newsite:"New Project Site" } },
+  agency: { label:"Security Agency", subs:{ existing:"Existing Agency", newagency:"New Agency" } },
+  reports: { label:"Reports", subs:{ site:"Site Reports", internal:"Internal Memo" } },
+  users: { label:"Users", subs:{ list:"User Accounts", add:"Add User" } },
+};
+let activeMain = "guard";
+let activeSub = "existing";
+
+function buildSidebarNav(){
+  const el = document.getElementById('mainTabs');
+  el.innerHTML = "<h3 class='sidebar-title'>Modules</h3>";
+  Object.keys(structure).forEach((key,i)=>{
+    if(key === "users" && !can('users_view')) return;
+    const group = document.createElement('div');
+    group.className = "nav-group" + (key===activeMain ? " active" : "");
+
+    const head = document.createElement('button');
+    head.innerHTML = `<span class="num">0${i+1}</span><span>${structure[key].label}</span><span class="chev">&#9656;</span>`;
+    head.onclick = ()=>{
+      if(activeMain === key){ activeMain = ""; }
+      else { activeMain = key; activeSub = Object.keys(structure[key].subs)[0]; }
+      render();
+    };
+    group.appendChild(head);
+
+    const subnav = document.createElement('div');
+    subnav.className = "subnav";
+    Object.keys(structure[key].subs).forEach(subKey=>{
+      const sb = document.createElement('button');
+      sb.className = (key===activeMain && subKey===activeSub) ? "active" : "";
+      sb.textContent = structure[key].subs[subKey];
+      sb.onclick = (e)=>{ e.stopPropagation(); activeMain = key; activeSub = subKey; render(); };
+      subnav.appendChild(sb);
+    });
+    group.appendChild(subnav);
+    el.appendChild(group);
+  });
+}
+
+/* ===================== ACCESS / SCOPE FILTERS ===================== */
+function visibleSites(){
+  if(role === "agency") return db.sites.filter(s=>s.agency === scopeAgency);
+  if(role === "pic" || role === "so") return db.sites.filter(s=>scopeArea.includes(s.area));
+  return db.sites;
+}
+function visibleGuards(list){
+  if(role === "agency") return list.filter(g=>g.agency === scopeAgency);
+  if(role === "pic" || role === "so") return list.filter(g=>scopeArea.includes(g.area));
+  return list;
+}
+
+/* ===================== RENDER CONTENT ===================== */
+function render(){
+  if(!currentUser) return;
+  buildSidebarNav();
+  const c = document.getElementById('content');
+  c.innerHTML = "";
+  if(!activeMain){
+    c.innerHTML = `<div class="card"><h2>Welcome, ${currentUser.name}</h2><div class="desc">Select a module from the left to get started.</div></div>`;
+    return;
+  }
+  const renderers = {
+    guard: { existing: renderExistingGuards, add: renderAddGuard, soMonitoring: renderSoMonitoring },
+    plantilla: { existing: renderPlantillaExisting, approved: renderPlantillaApproved },
+    sites: { existing: renderExistingSites, newsite: renderNewSite },
+    agency: { existing: renderExistingAgency, newagency: renderNewAgency },
+    reports: { site: renderSiteReports, internal: renderInternalReports },
+    users: { list: renderUserList, add: renderAddUser },
+  };
+  c.appendChild(renderers[activeMain][activeSub]());
+}
+function openModal(html){
+  document.getElementById('modalBox').innerHTML = html;
+  document.getElementById('modalOverlay').classList.add('active');
+}
+function closeModal(){
+  document.getElementById('modalOverlay').classList.remove('active');
+  document.getElementById('modalBox').innerHTML = "";
+}
+function el(tag, cls, html){
+  const e = document.createElement(tag);
+  if(cls) e.className = cls;
+  if(html!==undefined) e.innerHTML = html;
+  return e;
+}
+function noteAccess(area, editRoles){
+  if(can(area)) return `<span class="access-note">EDIT ACCESS: ${editRoles}</span>`;
+  return `<span class="locked-note">READ-ONLY — edit restricted to ${editRoles}</span>`;
+}
+function scopeNote(){
+  if(role === "agency") return `<span class="scope-note">SCOPE: showing only sites/guards deployed under ${scopeAgency}</span>`;
+  if(role === "pic" || role === "so") return `<span class="scope-note">SCOPE: areas — ${scopeArea.join(", ")}</span>`;
+  return "";
+}
+
+/* ---------- GUARD: Existing ---------- */
+function renderExistingGuards(){
+  const wrap = el('div');
+  const card = el('div','card');
+  card.appendChild(el('h2', null, 'Existing Guards'));
+  card.appendChild(el('div','desc','Deployed personnel roster. Editable by Security Agencies only. Visibility scoped by agency / area.'));
+  card.innerHTML += noteAccess('existingGuards_edit','Security Agencies') + " " + scopeNote();
+  const toolbar = el('div','toolbar','<input type="text" placeholder="Search guard name or site...">');
+  card.appendChild(toolbar);
+
+  const editable = can('existingGuards_edit');
+  const list = visibleGuards(db.guards);
+  let rows = list.map(g=>`
+    <tr>
+      <td>${g.name}</td><td>${g.gender}</td><td>${g.designation}</td><td>${g.site}</td><td>${g.area}</td><td>${g.agency}</td>
+      <td><span class="status-pill ${g.status==='Active'?'status-active':'status-inactive'}">${g.status}</span></td>
+      <td>${g.remarks}</td>
+      <td class="row-actions">
+        <button class="btn ghost" ${editable?'':'disabled'} onclick="alert('Edit form would open here for: ${g.name}')">Edit</button>
+      </td>
+    </tr>`).join("");
+  card.innerHTML += `<table><thead><tr><th>Name</th><th>Gender</th><th>Designation</th><th>Site</th><th>Area</th><th>Agency</th><th>Status</th><th>Remarks</th><th>Action</th></tr></thead><tbody>${rows || '<tr><td colspan="9" style="color:#8b96a3;">No guards in this scope.</td></tr>'}</tbody></table>`;
+  wrap.appendChild(card);
+  return wrap;
+}
+
+/* ---------- GUARD: Additional / New Deployment ---------- */
+function renderAddGuard(){
+  const wrap = el('div');
+  const editable = can('addGuard_edit');
+  const viewable = can('addGuard_view');
+  const card = el('div','card');
+  card.appendChild(el('h2', null,'Additional Guard — New Deployment'));
+  card.appendChild(el('div','desc','Submitted by Security Agencies for new deployment. Visible to PIC, Security Officers, Super Admin and Agencies — editable by Agencies only. Subject to SO approval (see "Deployment Approval").'));
+  card.innerHTML += noteAccess('addGuard_edit','Security Agencies');
+
+  if(!viewable){
+    card.innerHTML += `<p style="font-size:13px;color:var(--red);margin-top:10px;">You do not have view access to this tab.</p>`;
+    wrap.appendChild(card); return wrap;
+  }
+
+  if(role === 'superadmin' || role === 'so' || role === 'pic'){
+    const viewerRow = el('div');
+    viewerRow.style.marginBottom = "16px";
+    viewerRow.innerHTML = `<a href="https://drive.google.com/drive/folders/1BvNk2f2w0dejJb9lJXViUVgUsk0FwUqH" target="_blank"><button class="btn ghost">📁 View Guard Attachments in Google Drive</button></a>`;
+    card.appendChild(viewerRow);
+  }
+
+  const banner = el('div','banner-ok','✓ Guard record submitted and added to the deployment monitoring list.');
+  banner.id = "addGuardBanner";
+  card.appendChild(banner);
+
+  const form = el('div','form-grid');
+  form.innerHTML = `
+    <div class="field"><label>Guard's Name</label><input id="g_name" type="text" placeholder="Last, First, Middle"></div>
+    <div class="field"><label>Gender</label><select id="g_gender"><option>Male</option><option>Female</option></select></div>
+    <div class="field span2"><label>Present Address</label><input id="g_address" type="text"></div>
+    <div class="field"><label>Contact Number</label><input id="g_contact" type="text" placeholder="09XX-XXX-XXXX"></div>
+    <div class="field"><label>Birth Date</label><input id="g_bday" type="date"></div>
+    <div class="field"><label>License Number</label><input id="g_license" type="text"></div>
+    <div class="field"><label>License Issuance Date</label><input id="g_licdate" type="date"></div>
+    <div class="field"><label>Designation</label><select id="g_designation"><option>Security Guard</option><option>Head Guard</option></select></div>
+    <div class="field"><label>Endorsement Date</label><input id="g_endorse" type="date"></div>
+    <div class="field"><label>Deployment Date</label><input id="g_deploy" type="date"></div>
+    <div class="field"><label>Project Site</label>
+      <select id="g_site">${db.sites.map(s=>`<option>${s.name}</option>`).join("") || "<option>No sites yet</option>"}</select>
+    </div>
+    <div class="field"><label>Deployment Status</label><select id="g_dstatus"><option>Active</option><option>In-Active</option></select></div>
+    <div class="field"><label>Deployment Remarks</label>
+      <select id="g_remarks">
+        <option>On-duty</option><option>Resigned</option><option>Relieved</option>
+        <option>Transferred</option><option>Reliever</option>
+      </select>
+    </div>
+  `;
+  card.appendChild(form);
+
+  const div2 = el('div','section-divider');
+  div2.innerHTML = `<h3>Supporting Documents</h3>`;
+  const uploadGrid = el('div','form-grid');
+  uploadGrid.innerHTML = `
+    <div class="field">
+      <label>Upload PDF (e.g. license, clearance)</label>
+      <div class="upload-box" id="pdfBox" onclick="document.getElementById('pdfInput').click()">Click to attach PDF file</div>
+      <input type="file" id="pdfInput" accept="application/pdf" style="display:none" onchange="handleUpload(this,'pdfBox','PDF')">
+    </div>
+    <div class="field">
+      <label>Upload Image (e.g. 2x2 photo, ID)</label>
+      <div class="upload-box" id="imgBox" onclick="document.getElementById('imgInput').click()">Click to attach image file</div>
+      <input type="file" id="imgInput" accept="image/*" style="display:none" onchange="handleUpload(this,'imgBox','Image')">
+    </div>
+  `;
+  div2.appendChild(uploadGrid);
+
+  const linkNote = el('div','field span2');
+  linkNote.style.marginTop = "12px";
+  linkNote.innerHTML = `
+    <label>Monitoring Folder Link (Google Drive)</label>
+    <div class="link-box" id="driveLink">Not yet generated — will be created on submission.</div>
+    <div style="font-size:11px;color:#8b96a3;margin-top:5px;">
+      On submit, a per-guard subfolder is created inside the master Drive folder
+      <code>SecurityManagementHub/Guards/New Deployments/</code>, and its shareable link is stored here for monitoring.
+    </div>
+  `;
+  div2.appendChild(linkNote);
+  card.appendChild(div2);
+
+  const actions = el('div','form-actions');
+  actions.innerHTML = `
+    <button class="btn amber" ${editable?'':'disabled'} onclick="submitNewGuard()">Submit Deployment Record</button>
+    <button class="btn ghost" onclick="render()">Reset</button>
+  `;
+  card.appendChild(actions);
+
+  const div3 = el('div','section-divider');
+  div3.innerHTML = `<h3>Submitted Deployment Records</h3>`;
+  let rows = visibleGuards(db.newGuards).map(g=>`
+    <tr><td>${g.name}</td><td>${g.designation}</td><td>${g.site}</td><td>${g.deploy}</td>
+    <td><span class="status-pill ${g.dstatus==='Active'?'status-active':'status-inactive'}">${g.dstatus}</span></td>
+    <td>${g.remarks}</td>
+    <td><span class="status-pill ${g.soStatus==='Approved'?'status-active':(g.soStatus==='Disapproved'?'status-inactive':'status-pending')}">${g.soStatus}</span></td>
+    <td><a href="${g.link}" target="_blank">Drive link</a></td></tr>`).join("");
+  div3.innerHTML += `<table><thead><tr><th>Name</th><th>Designation</th><th>Site</th><th>Deployment Date</th><th>Status</th><th>Remarks</th><th>SO Status</th><th>Drive Folder</th></tr></thead>
+    <tbody>${rows || '<tr><td colspan="8" style="color:#8b96a3;">No records submitted yet.</td></tr>'}</tbody></table>`;
+  card.appendChild(div3);
+
+  wrap.appendChild(card);
+  return wrap;
+}
+const selectedFiles = {}; // keyed by input id -> File object, used when the matching form is submitted
+
+function handleUpload(input, boxId, label){
+  const box = document.getElementById(boxId);
+  if(input.files && input.files[0]){
+    box.classList.add('has-file');
+    box.textContent = "Attached (" + label + "): " + input.files[0].name;
+    selectedFiles[input.id] = input.files[0];
+  } else {
+    selectedFiles[input.id] = null;
+  }
+}
+function submitNewGuard(){
+  const name = document.getElementById('g_name').value || "(Unnamed Guard)";
+  const gender = document.getElementById('g_gender').value;
+  const address = document.getElementById('g_address').value;
+  const contact = document.getElementById('g_contact').value;
+  const license = document.getElementById('g_license').value;
+  const licDate = document.getElementById('g_licdate').value;
+  const bday = document.getElementById('g_bday').value;
+  const designation = document.getElementById('g_designation').value;
+  const endorse = document.getElementById('g_endorse').value;
+  const deploy = document.getElementById('g_deploy').value || "—";
+  const dstatus = document.getElementById('g_dstatus').value;
+  const remarks = document.getElementById('g_remarks').value;
+  const site = document.getElementById('g_site').value;
+  const siteRec = db.sites.find(s=>s.name===site);
+  const agency = role==='agency' ? scopeAgency : (siteRec ? siteRec.agency : "");
+  const area = siteRec ? siteRec.area : "";
+  const folderSlug = name.replace(/[^a-z0-9]+/gi,'-').toLowerCase();
+  const link = `https://drive.google.com/drive/folders/DEMO-${folderSlug}-${Date.now().toString().slice(-5)}`;
+  document.getElementById('driveLink').textContent = link + (SCRIPT_URL ? " (will be replaced by real folder link once synced)" : "");
+  db.newGuards.push({name, designation, deploy, dstatus, remarks, site, agency, area, link, soStatus:"Pending", soRemarks:""});
+
+  liveSync("Additional Guard", {
+    "Guard Name": name, "Gender": gender, "Present Address": address, "Contact Number": contact,
+    "License Number": license, "License Issuance Date": licDate, "Birth Date": bday,
+    "Designation": designation, "Endorsement Date": endorse, "Deployment Date": deploy,
+    "Project Site": site, "Area": area, "Security Agency": agency,
+    "Deployment Status": dstatus, "Deployment Remarks": remarks,
+    "SO Status": "Pending", "SO Remarks": "",
+    "Submitted By": currentUser ? currentUser.name : "", "Date Submitted": new Date().toISOString().slice(0,10)
+  }, name, "Guard Name", name);
+
+  const pdfFile = selectedFiles['pdfInput'];
+  const imgFile = selectedFiles['imgInput'];
+  if(pdfFile){
+    uploadFileToDrive({
+      file: pdfFile, category: "newGuard", guardName: name,
+      sheet: "Additional Guard", linkField: "PDF Link", key: "Guard Name", keyValue: name
+    }).then(res => {
+      if(res.ok){ console.log("PDF uploaded:", res.driveLink); }
+      else { alert("PDF upload failed: " + res.error); }
+    }).catch(err => alert("PDF upload failed: " + err.message));
+  }
+  if(imgFile){
+    uploadFileToDrive({
+      file: imgFile, category: "newGuard", guardName: name,
+      sheet: "Additional Guard", linkField: "Image Link", key: "Guard Name", keyValue: name
+    }).then(res => {
+      if(res.ok){ console.log("Image uploaded:", res.driveLink); }
+      else { alert("Image upload failed: " + res.error); }
+    }).catch(err => alert("Image upload failed: " + err.message));
+  }
+
+  document.getElementById('addGuardBanner').style.display = "block";
+  setTimeout(render, 600);
+}
+
+/* ---------- GUARD: For SO Monitoring ---------- */
+function renderSoMonitoring(){
+  const wrap = el('div');
+  const card = el('div','card');
+  card.appendChild(el('h2', null,'Deployment Approval — Approve / Disapprove New Guards'));
+  card.appendChild(el('div','desc','Every newly inputted Security Guard (Additional Guard submissions) appears here for Security Officer review. Approve or disapprove with remarks. Editable by Security Officers only.'));
+  card.innerHTML += noteAccess('soApproval_edit','Security Officers') + " " + scopeNote();
+
+  const editable = can('soApproval_edit');
+  const list = visibleGuards(db.newGuards);
+  let rows = list.map((g,i)=>{
+    const realIdx = db.newGuards.indexOf(g);
+    return `<tr class="so-row">
+      <td>${g.name}</td><td>${g.designation}</td><td>${g.site}</td><td>${g.area}</td><td>${g.agency}</td>
+      <td><span class="status-pill ${g.soStatus==='Approved'?'status-active':(g.soStatus==='Disapproved'?'status-inactive':'status-pending')}">${g.soStatus}</span></td>
+      <td><input class="remarks-input" type="text" id="soRemarks_${realIdx}" placeholder="SO remarks..." value="${g.soRemarks||''}" ${editable?'':'disabled'}></td>
+      <td class="row-actions">
+        <button class="btn approve" ${editable?'':'disabled'} onclick="setSoStatus(${realIdx},'Approved')">Approve</button>
+        <button class="btn disapprove" ${editable?'':'disabled'} onclick="setSoStatus(${realIdx},'Disapproved')">Disapprove</button>
+      </td>
+    </tr>`;
+  }).join("");
+  card.innerHTML += `<table><thead><tr><th>Name</th><th>Designation</th><th>Site</th><th>Area</th><th>Agency</th><th>SO Status</th><th>SO Remarks</th><th>Action</th></tr></thead>
+    <tbody>${rows || '<tr><td colspan="8" style="color:#8b96a3;">No new guard submissions in this scope.</td></tr>'}</tbody></table>`;
+  wrap.appendChild(card);
+  return wrap;
+}
+function setSoStatus(idx, status){
+  const remarksInput = document.getElementById('soRemarks_'+idx);
+  const remarks = remarksInput ? remarksInput.value : "";
+  db.newGuards[idx].soStatus = status;
+  db.newGuards[idx].soRemarks = remarks;
+
+  liveSync("Additional Guard", {
+    "SO Status": status, "SO Remarks": remarks
+  }, null, "Guard Name", db.newGuards[idx].name);
+  // Upsert: only "SO Status" and "SO Remarks" are sent, so the merge in
+  // doPost leaves every other column (name, license, deployment date, etc.)
+  // exactly as it already was on that guard's row — no duplicate row created.
+
+  render();
+}
+
+/* ---------- PLANTILLA ---------- */
+function renderPlantillaExisting(){
+  const wrap = el('div');
+  const card = el('div','card');
+  card.appendChild(el('h2',null,'Existing Plantilla'));
+  card.appendChild(el('div','desc','Current manpower plantilla per site, by agency.'));
+  let rows = db.plantillaExisting.map(p=>`<tr><td>${p.site}</td><td>${p.agency}</td><td>${p.slots}</td><td>${p.filled}</td><td>${p.slots-p.filled}</td></tr>`).join("");
+  card.innerHTML += `<table><thead><tr><th>Site</th><th>Agency</th><th>Approved Slots</th><th>Filled</th><th>Vacant</th></tr></thead><tbody>${rows}</tbody></table>`;
+  wrap.appendChild(card);
+  return wrap;
+}
+function renderPlantillaApproved(){
+  const wrap = el('div');
+  const editable = can('approvedPlantilla_edit');
+  const card = el('div','card');
+  card.appendChild(el('h2',null,'Approved Plantilla'));
+  card.appendChild(el('div','desc','Plantilla formally approved per project site, broken down by guard type. Editable by Super Admin and Security Officers.'));
+  card.innerHTML += noteAccess('approvedPlantilla_edit','Super Admin / Security Officer') + " " + scopeNote();
+
+  const form = el('div','form-grid');
+  form.innerHTML = `
+    <div class="field"><label>Project Site</label>
+      <select id="p_site" onchange="syncPlantillaSiteFields()" ${editable?'':'disabled'}>${db.sites.map(s=>`<option>${s.name}</option>`).join("") || "<option>No sites yet</option>"}</select>
+    </div>
+    <div class="field"><label>Security Agency</label>
+      <select id="p_agency" ${editable?'':'disabled'}>${db.agencies.map(a=>`<option>${a.name}</option>`).join("")}</select>
+    </div>
+    <div class="field"><label>Area</label>
+      <select id="p_area" ${editable?'':'disabled'}>${AREAS.map(a=>`<option>${a}</option>`).join("")}</select>
+    </div>
+    <div class="field"><label>Phase</label>
+      <select id="p_phase" ${editable?'':'disabled'}>${[...new Set(db.sites.map(s=>s.phase))].map(p=>`<option>${p}</option>`).join("") || "<option>—</option>"}</select>
+    </div>
+    <div class="field"><label>Gate Guard (count)</label><input id="p_gate" type="number" min="0" value="0" ${editable?'':'disabled'}></div>
+    <div class="field"><label>Roving Guard (count)</label><input id="p_roving" type="number" min="0" value="0" ${editable?'':'disabled'}></div>
+    <div class="field"><label>Warehouse Guard (count)</label><input id="p_warehouse" type="number" min="0" value="0" ${editable?'':'disabled'}></div>
+    <div class="field"><label>OIC / SIC (count)</label><input id="p_oicsic" type="number" min="0" value="0" ${editable?'':'disabled'}></div>
+  `;
+  card.appendChild(form);
+  const actions = el('div','form-actions');
+  actions.innerHTML = `<button class="btn amber" ${editable?'':'disabled'} onclick="submitApprovedPlantilla()">Save / Add Plantilla</button>`;
+  card.appendChild(actions);
+
+  const div2 = el('div','section-divider');
+  div2.innerHTML = `<h3>Approved Plantilla Records</h3>`;
+  let rows = db.plantillaApproved.map((p,i)=>`<tr>
+    <td>${p.site}</td><td>${p.area||"—"}</td><td>${p.phase||"—"}</td><td>${p.agency}</td><td>${p.gate}</td><td>${p.roving}</td><td>${p.warehouse}</td><td>${p.oicSic}</td>
+    <td>${p.gate+p.roving+p.warehouse+p.oicSic}</td><td>${p.approvedDate}</td>
+    <td><button class="btn ghost" ${editable?'':'disabled'} onclick="alert('Edit form would open for: ${p.site} / ${p.agency}')">Edit</button></td>
+  </tr>`).join("");
+  div2.innerHTML += `<table><thead><tr><th>Site</th><th>Area</th><th>Phase</th><th>Agency</th><th>Gate</th><th>Roving</th><th>Warehouse</th><th>OIC/SIC</th><th>Total</th><th>Date Approved</th><th>Action</th></tr></thead>
+    <tbody>${rows}</tbody></table>`;
+  card.appendChild(div2);
+
+  wrap.appendChild(card);
+  return wrap;
+}
+function syncPlantillaSiteFields(){
+  const siteName = document.getElementById('p_site').value;
+  const site = db.sites.find(s=>s.name===siteName);
+  if(site){
+    const areaSel = document.getElementById('p_area');
+    const phaseSel = document.getElementById('p_phase');
+    if(areaSel) areaSel.value = site.area;
+    if(phaseSel){
+      const opts = [...new Set(db.sites.filter(s=>s.name===siteName).map(s=>s.phase))];
+      phaseSel.innerHTML = opts.map(p=>`<option>${p}</option>`).join("");
+    }
+  }
+}
+function submitApprovedPlantilla(){
+  const site = document.getElementById('p_site').value;
+  const agency = document.getElementById('p_agency').value;
+  const area = document.getElementById('p_area').value;
+  const phase = document.getElementById('p_phase').value;
+  const gate = parseInt(document.getElementById('p_gate').value)||0;
+  const roving = parseInt(document.getElementById('p_roving').value)||0;
+  const warehouse = parseInt(document.getElementById('p_warehouse').value)||0;
+  const oicSic = parseInt(document.getElementById('p_oicsic').value)||0;
+  const approvedDate = new Date().toISOString().slice(0,10);
+  db.plantillaApproved.push({site, area, phase, agency, gate, roving, warehouse, oicSic, approvedDate});
+
+  liveSync("Plantilla - Approved", {
+    "Project Site": site, "Area": area, "Phase": phase, "Security Agency": agency,
+    "Gate Guard": gate, "Roving Guard": roving, "Warehouse Guard": warehouse, "OIC/SIC": oicSic,
+    "Total Slots": gate+roving+warehouse+oicSic, "Date Approved": approvedDate,
+    "Approved By": currentUser ? currentUser.name : "", "Remarks": ""
+  });
+
+  alert("Approved plantilla saved for " + site);
+  render();
+}
+
+/* ---------- SITES ---------- */
+function renderExistingSites(){
+  const wrap = el('div');
+  const card = el('div','card');
+  card.appendChild(el('h2',null,'Existing Sites'));
+  card.appendChild(el('div','desc','Active project sites. Editable by Super Admin only. Visibility scoped by agency / area.'));
+  card.innerHTML += noteAccess('existingSites_edit','Super Admin') + " " + scopeNote();
+  const editable = can('existingSites_edit');
+  const list = visibleSites();
+  let rows = list.map(s=>{
+    const idx = db.sites.indexOf(s);
+    return `<tr><td>${s.name}</td><td>${s.phase}</td><td><span class="cat-badge">Cat ${s.category}</span></td><td>${s.area}</td><td>${s.agency}</td><td>${s.status}</td>
+    <td class="row-actions">
+      <button class="btn ghost" onclick="viewSite(${idx})">View</button>
+      <button class="btn ghost" ${editable?'':'disabled'} onclick="editSite(${idx})">Edit</button>
+    </td></tr>`;
+  }).join("");
+  card.innerHTML += `<table><thead><tr><th>Project Site Name</th><th>Phase</th><th>Site Category</th><th>Area</th><th>Agency</th><th>Status</th><th>Action</th></tr></thead><tbody>${rows || '<tr><td colspan="7" style="color:#8b96a3;">No sites in this scope.</td></tr>'}</tbody></table>`;
+  wrap.appendChild(card);
+  return wrap;
+}
+function viewSite(idx){
+  const s = db.sites[idx];
+  if(!s) return;
+  openModal(`
+    <h2>${s.name}</h2>
+    <div class="desc">Project Site Details</div>
+    <div class="view-row"><span class="vlabel">Phase</span><span class="vvalue">${s.phase}</span></div>
+    <div class="view-row"><span class="vlabel">Site Category</span><span class="vvalue">Cat ${s.category}</span></div>
+    <div class="view-row"><span class="vlabel">Area</span><span class="vvalue">${s.area}</span></div>
+    <div class="view-row"><span class="vlabel">Security Agency</span><span class="vvalue">${s.agency}</span></div>
+    <div class="view-row"><span class="vlabel">Status</span><span class="vvalue">${s.status}</span></div>
+    <div class="modal-close-row"><button class="btn ghost" onclick="closeModal()">Close</button></div>
+  `);
+}
+function editSite(idx){
+  const s = db.sites[idx];
+  if(!s) return;
+  if(!can('existingSites_edit')){ alert("You don't have edit access for Project Sites."); return; }
+  openModal(`
+    <h2>Edit Project Site</h2>
+    <div class="desc">${s.name}</div>
+    <div class="form-grid">
+      <div class="field span2"><label>Project Site Name</label><input id="m_site_name" type="text" value="${s.name}"></div>
+      <div class="field"><label>Phase</label><input id="m_site_phase" type="text" value="${s.phase}"></div>
+      <div class="field"><label>Site Category</label>
+        <select id="m_site_category">${[1,2,3,4,5,6,7].map(n=>`<option value="${n}" ${n==s.category?'selected':''}>Category ${n}</option>`).join("")}</select>
+      </div>
+      <div class="field"><label>Area</label>
+        <select id="m_site_area">${AREAS.map(a=>`<option ${a===s.area?'selected':''}>${a}</option>`).join("")}</select>
+      </div>
+      <div class="field"><label>Security Agency</label>
+        <select id="m_site_agency">${db.agencies.map(a=>`<option ${a.name===s.agency?'selected':''}>${a.name}</option>`).join("")}</select>
+      </div>
+      <div class="field"><label>Status</label>
+        <select id="m_site_status">
+          <option ${s.status==='Operational'?'selected':''}>Operational</option>
+          <option ${s.status==='Suspended'?'selected':''}>Suspended</option>
+          <option ${s.status==='Closed'?'selected':''}>Closed</option>
+        </select>
+      </div>
+    </div>
+    <div class="modal-close-row">
+      <button class="btn ghost" onclick="closeModal()">Cancel</button>
+      <button class="btn amber" onclick="saveSiteEdit(${idx})">Save Changes</button>
+    </div>
+  `);
+}
+function saveSiteEdit(idx){
+  const s = db.sites[idx];
+  if(!s) return;
+  s.name = document.getElementById('m_site_name').value || s.name;
+  s.phase = document.getElementById('m_site_phase').value || s.phase;
+  s.category = document.getElementById('m_site_category').value;
+  s.area = document.getElementById('m_site_area').value;
+  s.agency = document.getElementById('m_site_agency').value;
+  s.status = document.getElementById('m_site_status').value;
+
+  liveSync("Project Sites - Existing", {
+    "Project Site Name": s.name, "Phase": s.phase, "Site Category": s.category,
+    "Area": s.area, "Security Agency": s.agency, "Status": s.status,
+    "Last Updated By": currentUser ? currentUser.name : ""
+  }, null, "Project Site Name", s.name);
+
+  closeModal();
+  render();
+}
+function renderNewSite(){
+  const wrap = el('div');
+  const editable = can('newSite_edit');
+  const card = el('div','card');
+  card.appendChild(el('h2',null,'New Project Site'));
+  card.appendChild(el('div','desc','Register a new project site. Restricted to Super Admin. Each phase carries its own Site Category (1–7). Area determines who can view this site.'));
+  card.innerHTML += noteAccess('newSite_edit','Super Admin');
+
+  const form = el('div','form-grid');
+  form.innerHTML = `
+    <div class="field span2"><label>Project Site Name</label><input id="s_name" type="text" ${editable?'':'disabled'}></div>
+    <div class="field"><label>Area</label>
+      <select id="s_area" ${editable?'':'disabled'}>${AREAS.map(a=>`<option>${a}</option>`).join("")}</select>
+    </div>
+    <div class="field"><label>Deployed Security Agency</label>
+      <select id="s_agency" ${editable?'':'disabled'}>${db.agencies.map(a=>`<option>${a.name}</option>`).join("")}</select>
+    </div>
+    <div class="field span2">
+      <label>Phase &amp; Site Category</label>
+      <div class="phase-list" id="phaseList"></div>
+      <div class="add-phase-row">
+        <input id="s_phaseInput" type="text" placeholder="e.g. Phase 3" ${editable?'':'disabled'}>
+        <select id="s_phaseCategory" ${editable?'':'disabled'}>
+          ${[1,2,3,4,5,6,7].map(n=>`<option value="${n}">Category ${n}</option>`).join("")}
+        </select>
+        <button class="btn ghost" ${editable?'':'disabled'} onclick="addPhase()">+ Add Phase</button>
+      </div>
+    </div>
+  `;
+  card.appendChild(form);
+  const actions = el('div','form-actions');
+  actions.innerHTML = `<button class="btn amber" ${editable?'':'disabled'} onclick="submitSite()">Save Project Site</button>`;
+  card.appendChild(actions);
+  wrap.appendChild(card);
+  setTimeout(renderPhaseChips, 0);
+  return wrap;
+}
+function renderPhaseChips(){
+  const list = document.getElementById('phaseList');
+  if(!list) return;
+  list.innerHTML = phaseDraft.map((p,i)=>`<div class="phase-chip">${p.phase}<span class="cat-badge">Cat ${p.category}</span><button onclick="removePhase(${i})">×</button></div>`).join("") || `<span style="font-size:12px;color:#8b96a3;">No phases added yet.</span>`;
+}
+function addPhase(){
+  const input = document.getElementById('s_phaseInput');
+  const cat = document.getElementById('s_phaseCategory').value;
+  if(input.value.trim()){ phaseDraft.push({phase:input.value.trim(), category:cat}); input.value=""; renderPhaseChips(); }
+}
+function removePhase(i){ phaseDraft.splice(i,1); renderPhaseChips(); }
+function submitSite(){
+  const name = document.getElementById('s_name').value || "(Unnamed Site)";
+  const area = document.getElementById('s_area').value;
+  const agency = document.getElementById('s_agency').value;
+  if(phaseDraft.length === 0){ alert("Add at least one phase with a site category before saving."); return; }
+  const dateCreated = new Date().toISOString().slice(0,10);
+  phaseDraft.forEach(p=>{
+    db.sites.push({name, phase:p.phase, category:p.category, area, agency, status:"Operational"});
+    liveSync("Project Sites - New", {
+      "Project Site Name": name, "Phase": p.phase, "Site Category (per phase)": p.category,
+      "Area": area, "Security Agency": agency, "Date Created": dateCreated,
+      "Created By": currentUser ? currentUser.name : ""
+    });
+  });
+  phaseDraft = [];
+  alert("Project site saved: " + name);
+  activeSub = "existing"; render();
+}
+
+/* ---------- AGENCY ---------- */
+function renderExistingAgency(){
+  const wrap = el('div');
+  const card = el('div','card');
+  card.appendChild(el('h2',null,'Existing Agency'));
+  card.appendChild(el('div','desc','Accredited security agencies on record.'));
+  card.innerHTML += noteAccess('agency_edit','Super Admin');
+  const editable = can('agency_edit');
+  let rows = db.agencies.map((a,idx)=>`<tr><td>${a.name}</td><td>${a.address}</td><td>${a.contact}</td><td>${a.details}</td><td>${a.lto}</td>
+    <td class="row-actions">
+      <button class="btn ghost" onclick="viewAgency(${idx})">View</button>
+      <button class="btn ghost" ${editable?'':'disabled'} onclick="editAgency(${idx})">Edit</button>
+    </td></tr>`).join("");
+  card.innerHTML += `<table><thead><tr><th>Agency Name</th><th>Business Address</th><th>Contact Person</th><th>Contact Details</th><th>LTO Number</th><th>Action</th></tr></thead><tbody>${rows}</tbody></table>`;
+  wrap.appendChild(card);
+  return wrap;
+}
+function viewAgency(idx){
+  const a = db.agencies[idx];
+  if(!a) return;
+  openModal(`
+    <h2>${a.name}</h2>
+    <div class="desc">Security Agency Details</div>
+    <div class="view-row"><span class="vlabel">Business Address</span><span class="vvalue">${a.address}</span></div>
+    <div class="view-row"><span class="vlabel">Contact Person</span><span class="vvalue">${a.contact}</span></div>
+    <div class="view-row"><span class="vlabel">Contact Details</span><span class="vvalue">${a.details}</span></div>
+    <div class="view-row"><span class="vlabel">LTO Number</span><span class="vvalue">${a.lto}</span></div>
+    <div class="modal-close-row"><button class="btn ghost" onclick="closeModal()">Close</button></div>
+  `);
+}
+function editAgency(idx){
+  const a = db.agencies[idx];
+  if(!a) return;
+  if(!can('agency_edit')){ alert("You don't have edit access for Security Agencies."); return; }
+  openModal(`
+    <h2>Edit Security Agency</h2>
+    <div class="desc">${a.name}</div>
+    <div class="form-grid">
+      <div class="field span2"><label>Security Agency Name</label><input id="m_a_name" type="text" value="${a.name}"></div>
+      <div class="field span2"><label>Business Address</label><input id="m_a_address" type="text" value="${a.address}"></div>
+      <div class="field"><label>Contact Person</label><input id="m_a_contact" type="text" value="${a.contact}"></div>
+      <div class="field"><label>Contact Details</label><input id="m_a_details" type="text" value="${a.details}"></div>
+      <div class="field"><label>LTO Number</label><input id="m_a_lto" type="text" value="${a.lto}"></div>
+    </div>
+    <div class="modal-close-row">
+      <button class="btn ghost" onclick="closeModal()">Cancel</button>
+      <button class="btn amber" onclick="saveAgencyEdit(${idx})">Save Changes</button>
+    </div>
+  `);
+}
+function saveAgencyEdit(idx){
+  const a = db.agencies[idx];
+  if(!a) return;
+  const oldName = a.name;
+  a.name = document.getElementById('m_a_name').value || a.name;
+  a.address = document.getElementById('m_a_address').value;
+  a.contact = document.getElementById('m_a_contact').value;
+  a.details = document.getElementById('m_a_details').value;
+  a.lto = document.getElementById('m_a_lto').value;
+
+  liveSync("Security Agency", {
+    "Security Agency Name": a.name, "Business Address": a.address, "Contact Person": a.contact,
+    "Contact Details": a.details, "LTO Number": a.lto, "Status": "Active"
+  }, null, "Security Agency Name", oldName);
+
+  closeModal();
+  render();
+}
+function renderNewAgency(){
+  const wrap = el('div');
+  const editable = can('agency_edit');
+  const card = el('div','card');
+  card.appendChild(el('h2',null,'New Agency'));
+  card.appendChild(el('div','desc','Accredit a new security agency.'));
+  card.innerHTML += noteAccess('agency_edit','Super Admin');
+  const form = el('div','form-grid');
+  form.innerHTML = `
+    <div class="field span2"><label>Security Agency Name</label><input id="a_name" type="text" ${editable?'':'disabled'}></div>
+    <div class="field span2"><label>Business Address</label><input id="a_address" type="text" ${editable?'':'disabled'}></div>
+    <div class="field"><label>Contact Person</label><input id="a_contact" type="text" ${editable?'':'disabled'}></div>
+    <div class="field"><label>Contact Details</label><input id="a_details" type="text" placeholder="Phone / Email" ${editable?'':'disabled'}></div>
+    <div class="field"><label>LTO Number</label><input id="a_lto" type="text" ${editable?'':'disabled'}></div>
+  `;
+  card.appendChild(form);
+  const actions = el('div','form-actions');
+  actions.innerHTML = `<button class="btn amber" ${editable?'':'disabled'} onclick="submitAgency()">Save Agency</button>`;
+  card.appendChild(actions);
+  wrap.appendChild(card);
+  return wrap;
+}
+function submitAgency(){
+  const name = document.getElementById('a_name').value || "(Unnamed Agency)";
+  const address = document.getElementById('a_address').value;
+  const contact = document.getElementById('a_contact').value;
+  const details = document.getElementById('a_details').value;
+  const lto = document.getElementById('a_lto').value;
+  db.agencies.push({name, address, contact, details, lto});
+
+  liveSync("Security Agency", {
+    "Security Agency Name": name, "Business Address": address, "Contact Person": contact,
+    "Contact Details": details, "LTO Number": lto,
+    "Date Accredited": new Date().toISOString().slice(0,10), "Status": "Active"
+  }, null, "Security Agency Name", name);
+
+  alert("Agency saved: " + name);
+  activeSub = "existing"; render();
+}
+
+/* ---------- REPORTS ---------- */
+function renderSiteReports(){
+  const wrap = el('div');
+  const card = el('div','card');
+  card.appendChild(el('h2',null,'Site Reports'));
+  card.appendChild(el('div','desc','Per-site operational and investigation reports, consolidated by category.'));
+
+  if(role === 'superadmin'){
+    const adminRow = el('div');
+    adminRow.style.marginBottom = "16px";
+    adminRow.innerHTML = `<a href="https://drive.google.com/drive/folders/1IrO0unwHxVuEKYHOrk_v_3llP-uQuWBI" target="_blank"><button class="btn ghost">📁 View Sent Reports in Google Drive</button></a>`;
+    card.appendChild(adminRow);
+  }
+
+  const form = el('div','form-grid');
+  form.innerHTML = `
+    <div class="field"><label>Site</label><select id="r_site">${db.sites.map(s=>`<option>${s.name}</option>`).join("") || "<option>No sites yet</option>"}</select></div>
+    <div class="field"><label>Report Type</label>
+      <select id="r_type">
+        <option value="investigationPIC">Investigation Report (PIC)</option>
+        <option value="investigationAgency">Investigation Report (Agency)</option>
+        <option value="finalSO">Final Report (SO)</option>
+        <option value="siteAssessmentSO">Site Assessment / Inspection Report (SO)</option>
+        <option value="siteAssessmentAgency">Site Assessment / Inspection Report (Agency)</option>
+      </select>
+    </div>
+    <div class="field span2"><label>Upload Report (PDF/Image)</label>
+      <div class="upload-box" id="siteRptBox" onclick="document.getElementById('siteRptInput').click()">Click to attach file</div>
+      <input type="file" id="siteRptInput" style="display:none" onchange="handleUpload(this,'siteRptBox','File')">
+      <div style="font-size:11px;color:#8b96a3;margin-top:5px;">Report Date is recorded automatically at the moment of upload.</div>
+    </div>
+  `;
+  card.appendChild(form);
+  const actions = el('div','form-actions');
+  actions.innerHTML = `<button class="btn amber" onclick="submitSiteReport()">Submit Report</button>`;
+  card.appendChild(actions);
+
+  const div2 = el('div','section-divider');
+  div2.innerHTML = `<h3>Report Categories</h3>`;
+  const cats = [
+    ["Investigation Report (PIC)","investigationPIC"],
+    ["Investigation Report (Agency)","investigationAgency"],
+    ["Final Report (SO)","finalSO"],
+    ["Site Assessment / Inspection Report (SO)","siteAssessmentSO"],
+    ["Site Assessment / Inspection Report (Agency)","siteAssessmentAgency"],
+  ];
+  const ul = el('ul','report-list');
+  cats.forEach(([label,key])=>{
+    const li = el('li');
+    li.innerHTML = `<span>${label} <span class="tag">(${db.reports[key].length} logged)</span></span>
+      <span style="display:flex;gap:6px;">
+        <button class="btn ghost" style="font-size:11px;padding:4px 10px;" onclick="viewReportCategory('${label}','${key}')">View</button>
+      </span>`;
+    ul.appendChild(li);
+  });
+  div2.appendChild(ul);
+  card.appendChild(div2);
+
+  wrap.appendChild(card);
+  return wrap;
+}
+function submitSiteReport(){
+  const type = document.getElementById('r_type').value; // matches CATEGORY_FOLDERS keys exactly
+  const site = document.getElementById('r_site').value;
+  const date = new Date().toISOString().slice(0,10);
+  const categoryLabel = document.getElementById('r_type').selectedOptions[0].text;
+  db.reports[type].push({site, date});
+
+  const file = selectedFiles['siteRptInput'];
+  const baseRow = {
+    "Project Site": site, "Report Category": categoryLabel, "Report Date": date,
+    "Submitted By": currentUser ? currentUser.name : "", "Remarks": ""
+  };
+
+  if(file){
+    uploadFileToDrive({
+      file: file, category: type, sheet: "Site Reports", row: baseRow, linkField: "File Link"
+    }).then(res => {
+      if(!res.ok) alert("Report uploaded, but saving the row failed: " + res.error);
+    }).catch(err => alert("Report file upload failed: " + err.message + "\n\nThe report was not logged because the file couldn't be saved to Drive."));
+  } else {
+    liveSync("Site Reports", Object.assign({ "File Link": "" }, baseRow));
+  }
+
+  alert("Site report logged under: " + categoryLabel);
+  render();
+}
+function renderInternalReports(){
+  const wrap = el('div');
+  const card = el('div','card');
+  card.appendChild(el('h2',null,'Internal Memo'));
+  card.appendChild(el('div','desc','Select a Project Site and the type of memo to log a new entry. File uploads are saved to the matching Drive folder.'));
+
+  if(role === 'superadmin'){
+    const adminRow = el('div');
+    adminRow.style.marginBottom = "16px";
+    adminRow.innerHTML = `<a href="https://drive.google.com/drive/folders/1o_0P2mQ8vTNmdv96XPFUpQU2wmE6RztH" target="_blank"><button class="btn ghost">📁 View Sent Memos in Google Drive</button></a>`;
+    card.appendChild(adminRow);
+  }
+
+  const memoCats = [
+    ["Plantilla Movement","memoPlantilla"],
+    ["Notice To Proceed","memoNTP"],
+    ["Notice Of Termination","memoNOT"],
+    ["Notice Of Violation","memoNOV"],
+    ["Special Requests","memoSpecial"],
+  ];
+
+  const form = el('div','form-grid');
+  form.innerHTML = `
+    <div class="field"><label>Project Site</label>
+      <select id="memo_start_site">${db.sites.map(s=>`<option>${s.name}</option>`).join("") || "<option>—</option>"}</select>
+    </div>
+    <div class="field"><label>Type of Internal Memo</label>
+      <select id="memo_start_type">${memoCats.map(([label,key])=>`<option value="${key}">${label}</option>`).join("")}</select>
+    </div>
+  `;
+  card.appendChild(form);
+  const actions = el('div','form-actions');
+  actions.innerHTML = `<button class="btn amber" onclick="startMemoEntry()">Continue</button>`;
+  card.appendChild(actions);
+
+  const div2 = el('div','section-divider');
+  div2.innerHTML = `<h3>Logged Entries by Type</h3>`;
+  const ul = el('ul','report-list');
+  memoCats.forEach(([label,key])=>{
+    const li = el('li');
+    li.innerHTML = `<span>${label} <span class="tag">(${db.reports[key].length} logged)</span></span>
+      <span style="display:flex;gap:6px;">
+        <button class="btn ghost" style="font-size:11px;padding:4px 10px;" onclick="viewReportCategory('${label}','${key}')">View</button>
+      </span>`;
+    ul.appendChild(li);
+  });
+  div2.appendChild(ul);
+  card.appendChild(div2);
+
+  wrap.appendChild(card);
+  return wrap;
+}
+function startMemoEntry(){
+  const site = document.getElementById('memo_start_site').value;
+  const key = document.getElementById('memo_start_type').value;
+  const label = document.getElementById('memo_start_type').selectedOptions[0].text;
+  logReport(key, label, site);
+}
+function logReport(key, label, preselectedSite){
+  openModal(`
+    <h2>${label}</h2>
+    <div class="desc">Log a new Internal Memo entry. File uploads are saved to the matching Drive folder.</div>
+    <div class="form-grid">
+      <div class="field"><label>Project Site</label>
+        <select id="m_memo_site">${db.sites.map(s=>`<option ${s.name===preselectedSite?'selected':''}>${s.name}</option>`).join("") || "<option>—</option>"}</select>
+      </div>
+      <div class="field span2"><label>Prepared By</label><input id="m_memo_preparedby" type="text" value="${currentUser ? currentUser.name : ''}"></div>
+      <div class="field span2"><label>Remarks</label><input id="m_memo_remarks" type="text"></div>
+      <div class="field span2">
+        <label>Attach Document (PDF/Image)</label>
+        <div class="upload-box" id="memoUploadBox" onclick="document.getElementById('memoUploadInput').click()">Click to attach file</div>
+        <input type="file" id="memoUploadInput" style="display:none" onchange="handleUpload(this,'memoUploadBox','File')">
+        <div style="font-size:11px;color:#8b96a3;margin-top:5px;">Date is recorded automatically at the moment of upload.</div>
+      </div>
+    </div>
+    <div class="modal-close-row">
+      <button class="btn ghost" onclick="closeModal()">Cancel</button>
+      <button class="btn amber" onclick="submitMemo('${key}','${label}')">Submit</button>
+    </div>
+  `);
+}
+function submitMemo(key, label){
+  const site = document.getElementById('m_memo_site').value;
+  const date = new Date().toISOString().slice(0,10);
+  const preparedBy = document.getElementById('m_memo_preparedby').value;
+  const remarks = document.getElementById('m_memo_remarks').value;
+  const file = selectedFiles['memoUploadInput'];
+
+  db.reports[key].push({date, site});
+
+  const baseRow = {
+    "Memo Type": label, "Project Site": site, "Date": date, "Prepared By": preparedBy,
+    "Submitted By Role": currentUser ? roleLabels[role] : "", "Status": "Submitted", "Remarks": remarks
+  };
+
+  if(file){
+    uploadFileToDrive({
+      file: file, category: key, sheet: "Internal Memo", row: baseRow, linkField: "File Link"
+    }).then(res => {
+      if(!res.ok) alert("Memo uploaded, but saving the row failed: " + res.error);
+    }).catch(err => alert("Memo file upload failed: " + err.message));
+  } else {
+    liveSync("Internal Memo", Object.assign({ "File Link": "" }, baseRow));
+  }
+
+  closeModal();
+  alert(label + " entry logged.");
+  render();
+}
+function viewReportCategory(label, key){
+  const entries = db.reports[key] || [];
+  const rows = entries.length
+    ? entries.map((e,i)=>`<tr>
+        <td>${e.site || "—"}</td>
+        <td>${e.date || "—"}</td>
+        <td>${e.remarks || "—"}</td>
+        <td class="row-actions">
+          <button class="btn ghost" style="font-size:11px;padding:4px 10px;" onclick="editReportEntry('${key}',${i})">Edit</button>
+        </td>
+      </tr>`).join("")
+    : `<tr><td colspan="4" style="color:#8b96a3;text-align:center;padding:16px;">No entries logged yet.</td></tr>`;
+  openModal(`
+    <h2>${label}</h2>
+    <div class="desc">All logged entries for this report category.</div>
+    <table style="margin-top:8px;">
+      <thead><tr><th>Site</th><th>Date</th><th>Remarks</th><th>Action</th></tr></thead>
+      <tbody>${rows}</tbody>
+    </table>
+    <div class="modal-close-row"><button class="btn ghost" onclick="closeModal()">Close</button></div>
+  `);
+}
+function editReportEntry(key, idx){
+  const e = db.reports[key] && db.reports[key][idx];
+  if(!e) return;
+  openModal(`
+    <h2>Edit Entry</h2>
+    <div class="desc">Update the details of this logged report entry.</div>
+    <div class="form-grid">
+      <div class="field"><label>Project Site</label>
+        <select id="er_site">${db.sites.map(s=>`<option ${s.name===e.site?'selected':''}>${s.name}</option>`).join("") || `<option>${e.site||'—'}</option>`}</select>
+      </div>
+      <div class="field"><label>Date</label>
+        <input id="er_date" type="date" value="${e.date||''}">
+      </div>
+      <div class="field span2"><label>Remarks</label>
+        <input id="er_remarks" type="text" value="${e.remarks||''}">
+      </div>
+    </div>
+    <div class="modal-close-row">
+      <button class="btn ghost" onclick="closeModal()">Cancel</button>
+      <button class="btn amber" onclick="saveReportEntry('${key}',${idx})">Save Changes</button>
+    </div>
+  `);
+}
+function saveReportEntry(key, idx){
+  const e = db.reports[key] && db.reports[key][idx];
+  if(!e) return;
+  e.site    = document.getElementById('er_site').value;
+  e.date    = document.getElementById('er_date').value;
+  e.remarks = document.getElementById('er_remarks').value;
+  closeModal();
+  render();
+}
+
+/* ---------- USERS (Super Admin only) ---------- */
+function renderUserList(){
+  const wrap = el('div');
+  const card = el('div','card');
+  card.appendChild(el('h2',null,'User Accounts'));
+  card.appendChild(el('div','desc','All registered users and their access scope. Visible and editable by Super Admin only.'));
+  card.innerHTML += noteAccess('users_edit','Super Admin');
+  if(!can('users_view')){
+    card.innerHTML += `<p style="font-size:13px;color:var(--red);">You do not have access to this module.</p>`;
+    wrap.appendChild(card); return wrap;
+  }
+  const editable = can('users_edit');
+  let rows = db.users.map((u,i)=>`<tr>
+    <td>${u.name}</td><td>${u.email}</td><td>${u.designation}</td>
+    <td>${u.agency || "—"}</td><td>${u.area || "—"}</td>
+    <td class="row-actions">
+      <button class="btn ghost" onclick="viewUser(${i})">View</button>
+      <button class="btn ghost" ${editable?'':'disabled'} onclick="editUser(${i})">Edit</button>
+    </td>
+  </tr>`).join("");
+  card.innerHTML += `<table><thead><tr><th>Name</th><th>E-mail</th><th>Designation</th><th>Security Agency</th><th>Area</th><th>Action</th></tr></thead><tbody>${rows}</tbody></table>`;
+  wrap.appendChild(card);
+  return wrap;
+}
+function renderAddUser(){
+  const wrap = el('div');
+  const editable = can('users_edit');
+  const card = el('div','card');
+  card.appendChild(el('h2',null,'Add User'));
+  card.appendChild(el('div','desc','Create a user account and assign access scope. Restricted to Super Admin.'));
+  card.innerHTML += noteAccess('users_edit','Super Admin');
+  if(!editable){
+    wrap.appendChild(card); return wrap;
+  }
+  const form = el('div','form-grid');
+  form.innerHTML = `
+    <div class="field"><label>Name</label><input id="u_name" type="text"></div>
+    <div class="field"><label>E-mail</label><input id="u_email" type="email"></div>
+    <div class="field"><label>Designation</label>
+      <select id="u_designation" onchange="toggleUserScopeFields()">
+        <option value="Security Agency">Security Agency</option>
+        <option value="PIC">PIC</option>
+        <option value="Security Officer">Security Officer</option>
+        <option value="Super Admin">Super Admin</option>
+      </select>
+    </div>
+    <div class="field" id="u_agencyField"><label>Security Agency</label>
+      <select id="u_agency">${db.agencies.map(a=>`<option>${a.name}</option>`).join("")}</select>
+    </div>
+    <div class="field" id="u_areaField" style="display:none;"><label>Area (PIC / SO scope) — select one or more</label>
+      <div id="u_area_checks" style="display:flex;flex-wrap:wrap;gap:8px 16px;margin-top:4px;">
+        ${AREAS.map(a=>`<label style="display:flex;align-items:center;gap:5px;font-size:13px;font-weight:normal;text-transform:none;letter-spacing:0;cursor:pointer;"><input type="checkbox" value="${a}" style="accent-color:var(--accent);width:15px;height:15px;">${a}</label>`).join("")}
+      </div>
+    </div>
+  `;
+  card.appendChild(form);
+  const actions = el('div','form-actions');
+  actions.innerHTML = `<button class="btn amber" onclick="submitUser()">Save User</button>`;
+  card.appendChild(actions);
+  wrap.appendChild(card);
+  return wrap;
+}
+function toggleUserScopeFields(){
+  const designation = document.getElementById('u_designation').value;
+  const agencyField = document.getElementById('u_agencyField');
+  const areaField = document.getElementById('u_areaField');
+  if(designation === "Security Agency"){ agencyField.style.display=""; areaField.style.display="none"; }
+  else if(designation === "PIC" || designation === "Security Officer"){ agencyField.style.display="none"; areaField.style.display=""; }
+  else { agencyField.style.display="none"; areaField.style.display="none"; }
+}
+function submitUser(){
+  const name = document.getElementById('u_name').value || "(Unnamed User)";
+  const email = document.getElementById('u_email').value.trim();
+  if(!email){ alert("E-mail is required — it is used as the login credential."); return; }
+  if(db.users.some(u=>u.email.toLowerCase()===email.toLowerCase())){ alert("A user with this e-mail already exists."); return; }
+  const designation = document.getElementById('u_designation').value;
+  const agency = (designation==="Security Agency") ? document.getElementById('u_agency').value : "";
+  const area = (designation==="PIC" || designation==="Security Officer")
+    ? [...document.querySelectorAll('#u_area_checks input[type=checkbox]:checked')].map(c=>c.value).join(",")
+    : "";
+  db.users.push({name, email, designation, agency, area});
+
+  liveSync("Users", {
+    "Name": name, "E-mail": email, "Designation": designation, "Security Agency": agency,
+    "Area (PIC/SO)": area, "Date Created": new Date().toISOString().slice(0,10), "Status": "Active"
+  }, null, "E-mail", email);
+  alert("User saved: " + name + "\nThey can now log in with this e-mail: " + email);
+  activeSub = "list"; render();
+}
+function viewUser(idx){
+  const u = db.users[idx];
+  if(!u) return;
+  openModal(`
+    <h2>${u.name}</h2>
+    <div class="desc">User Account Details</div>
+    <div class="view-row"><span class="vlabel">E-mail</span><span class="vvalue">${u.email}</span></div>
+    <div class="view-row"><span class="vlabel">Designation</span><span class="vvalue">${u.designation}</span></div>
+    <div class="view-row"><span class="vlabel">Security Agency</span><span class="vvalue">${u.agency || "—"}</span></div>
+    <div class="view-row"><span class="vlabel">Area Scope</span><span class="vvalue">${u.area || "—"}</span></div>
+    <div class="modal-close-row"><button class="btn ghost" onclick="closeModal()">Close</button></div>
+  `);
+}
+function editUser(idx){
+  const u = db.users[idx];
+  if(!u) return;
+  if(!can('users_edit')){ alert("You don't have edit access for Users."); return; }
+  const areaChecks = AREAS.map(a=>`
+    <label style="display:flex;align-items:center;gap:5px;font-size:13px;font-weight:normal;text-transform:none;letter-spacing:0;cursor:pointer;">
+      <input type="checkbox" class="eu_area_check" value="${a}" ${(u.area||'').split(',').map(x=>x.trim()).includes(a)?'checked':''} style="accent-color:var(--accent);width:15px;height:15px;">${a}
+    </label>`).join('');
+  openModal(`
+    <h2>Edit User</h2>
+    <div class="desc">${u.email}</div>
+    <div class="form-grid">
+      <div class="field span2"><label>Name</label><input id="eu_name" type="text" value="${u.name}"></div>
+      <div class="field"><label>Designation</label>
+        <select id="eu_designation" onchange="toggleEditUserScopeFields()">
+          <option ${u.designation==='Security Agency'?'selected':''}>Security Agency</option>
+          <option ${u.designation==='PIC'?'selected':''}>PIC</option>
+          <option ${u.designation==='Security Officer'?'selected':''}>Security Officer</option>
+          <option ${u.designation==='Super Admin'?'selected':''}>Super Admin</option>
+        </select>
+      </div>
+      <div class="field" id="eu_agencyField" style="${u.designation==='Security Agency'?'':'display:none'}">
+        <label>Security Agency</label>
+        <select id="eu_agency">${db.agencies.map(a=>`<option ${a.name===u.agency?'selected':''}>${a.name}</option>`).join('')}</select>
+      </div>
+      <div class="field span2" id="eu_areaField" style="${(u.designation==='PIC'||u.designation==='Security Officer')?'':'display:none'}">
+        <label>Area Scope — select one or more</label>
+        <div style="display:flex;flex-wrap:wrap;gap:8px 16px;margin-top:4px;">${areaChecks}</div>
+      </div>
+    </div>
+    <div class="modal-close-row">
+      <button class="btn ghost" onclick="closeModal()">Cancel</button>
+      <button class="btn amber" onclick="saveUserEdit(${idx})">Save Changes</button>
+    </div>
+  `);
+}
+function toggleEditUserScopeFields(){
+  const d = document.getElementById('eu_designation').value;
+  const af = document.getElementById('eu_agencyField');
+  const rf = document.getElementById('eu_areaField');
+  if(d==='Security Agency'){ af.style.display=''; rf.style.display='none'; }
+  else if(d==='PIC'||d==='Security Officer'){ af.style.display='none'; rf.style.display=''; }
+  else { af.style.display='none'; rf.style.display='none'; }
+}
+function saveUserEdit(idx){
+  const u = db.users[idx];
+  if(!u) return;
+  const oldEmail = u.email;
+  u.name        = document.getElementById('eu_name').value || u.name;
+  u.designation = document.getElementById('eu_designation').value;
+  u.agency      = u.designation==='Security Agency' ? document.getElementById('eu_agency').value : '';
+  u.area        = (u.designation==='PIC'||u.designation==='Security Officer')
+    ? [...document.querySelectorAll('.eu_area_check:checked')].map(c=>c.value).join(',')
+    : '';
+  liveSync("Users", {
+    "Name": u.name, "E-mail": u.email, "Designation": u.designation,
+    "Security Agency": u.agency, "Area (PIC/SO)": u.area
+  }, null, "E-mail", oldEmail);
+  closeModal();
+  render();
+}
+
+/* ===================== LOAD LIVE DATA FROM SHEET ON STARTUP ===================== */
+/* Without this, every fresh copy of this file falls back to the hardcoded
+   seed data below (db.users, db.agencies, db.sites) and "forgets" anything
+   added through the live app, since the app only ever WROTE to the Sheet —
+   it never read back from it. This pulls current Users / Agencies / Sites
+   from the Sheet on load and merges them over the seed data (seed accounts
+   like admin@smg.ph still work as a fallback if the Sheet row isn't there). */
+
+async function fetchSheetRows(sheetName, { retries = 2, silent = false } = {}){
+  if(!SCRIPT_URL) return [];
+  let lastErr;
+  for(let attempt = 0; attempt <= retries; attempt++){
+    if(attempt > 0) await new Promise(r => setTimeout(r, 800 * attempt)); // backoff: 800ms, 1600ms
+    try{
+      const data = await jsonpRequest(SCRIPT_URL + "?sheet=" + encodeURIComponent(sheetName));
+      if(data.ok) return data.rows || [];
+      lastErr = new Error(data.error || "Backend returned ok:false");
+    } catch(err){
+      lastErr = err;
+    }
+  }
+  if(!silent) console.warn(`[SentryHub] Sheet '${sheetName}' unavailable after ${retries+1} attempt(s) — using cached/seed data. (${lastErr && lastErr.message})`);
+  return [];
+}
+
+function mergeByKey(targetArray, newItems, keyFn){
+  newItems.forEach(item => {
+    const key = keyFn(item);
+    if(!key) return;
+    const idx = targetArray.findIndex(existing => keyFn(existing).toLowerCase() === String(key).toLowerCase());
+    if(idx >= 0) targetArray[idx] = item; else targetArray.push(item);
+  });
+}
+
+async function loadAllFromBackend(){
+  if(!SCRIPT_URL) return; // demo mode — keep seed data as-is
+
+  const [userRows, agencyRows, siteRows] = await Promise.all([
+    fetchSheetRows("Users",                    { silent: true }),
+    fetchSheetRows("Security Agency",          { silent: true }),
+    fetchSheetRows("Project Sites - Existing", { silent: true })
+  ]);
+
+  const anyLoaded = userRows.length || agencyRows.length || siteRows.length;
+  if(!anyLoaded){
+    console.info("[SentryHub] Backend unreachable at startup — running on seed/cached data. Use 'Test Connection' after login to diagnose.");
+  }
+
+  mergeByKey(
+    db.users,
+    userRows.filter(r => r["E-mail"]).map(r => ({
+      name: r["Name"] || "", email: r["E-mail"], designation: r["Designation"] || "",
+      agency: r["Security Agency"] || "", area: r["Area (PIC/SO)"] || ""
+    })),
+    u => u.email
+  );
+
+  mergeByKey(
+    db.agencies,
+    agencyRows.filter(r => r["Security Agency Name"]).map(r => ({
+      name: r["Security Agency Name"], address: r["Business Address"] || "",
+      contact: r["Contact Person"] || "", details: r["Contact Details"] || "", lto: r["LTO Number"] || ""
+    })),
+    a => a.name
+  );
+
+  siteRows.filter(r => r["Project Site Name"]).forEach(r => {
+    const mapped = {
+      name: r["Project Site Name"], phase: r["Phase"] || "", category: r["Site Category"] || "",
+      area: r["Area"] || "", agency: r["Security Agency"] || "", status: r["Status"] || "Operational"
+    };
+    const idx = db.sites.findIndex(s => s.name === mapped.name && s.phase === mapped.phase);
+    if(idx >= 0) db.sites[idx] = mapped; else db.sites.push(mapped);
+  });
+  return { connected: !!anyLoaded };
+}
+
+(async function startup(){
+  const loginBtn = document.getElementById('loginBtn');
+  const hint = document.querySelector('.login-hint');
+  if(SCRIPT_URL){
+    backendDataLoading = true;
+    updateLoginButtonState();
+    if(loginBtn) loginBtn.textContent = "Loading latest data...";
+    if(hint) hint.textContent = "Syncing accounts and sites from Google Sheets...";
+    const { connected } = await loadAllFromBackend() || {};
+    if(hint) hint.textContent = connected
+      ? "Access is granted only to e-mails added via the Users tab by a Super Admin."
+      : "⚠ Could not reach the backend — logging in with cached accounts. Use 'Test Connection' after login.";
+  }
+  if(loginBtn) loginBtn.textContent = "Log In";
+  backendDataLoading = false;
+  updateLoginButtonState();
+})();
+
+/* ===================== INIT ===================== */
+/* App starts at the login screen — render() is called only after attemptLogin() succeeds. */
+</script>
+</body>
+</html>
